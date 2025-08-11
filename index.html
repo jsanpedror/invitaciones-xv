@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Índice de Invitaciones – XV de Sofía</title>
+  <style>
+    :root{
+      --bg:#0f0f10;
+      --card:#1a1a1d;
+      --txt:#f2f2f2;
+      --muted:#bbbbbb;
+      --accent:#c1121f;
+      --accent-2:#e01e37;
+      --ok:#25D366;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--txt);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background:linear-gradient(180deg, rgba(0,0,0,.8), rgba(0,0,0,.4));
+      backdrop-filter: blur(6px);
+      padding:14px 16px; border-bottom:1px solid #222;
+    }
+    h1{margin:0; font-size:1.25rem; letter-spacing:.5px}
+    .sub{color:var(--muted); font-size:.9rem; margin-top:4px}
+    main{padding:16px; max-width:1000px; margin:0 auto}
+    .toolbar{
+      display:flex; gap:8px; flex-wrap:wrap; margin:12px 0 16px;
+    }
+    input[type="search"], input[type="text"]{
+      flex:1 1 220px; padding:12px 12px; border-radius:10px; border:1px solid #29292b;
+      background:#121214; color:var(--txt); outline:none;
+    }
+    .btn{
+      appearance:none; border:none; border-radius:10px; padding:12px 14px; font-weight:600;
+      color:#fff; background:var(--accent); cursor:pointer;
+    }
+    .btn.secondary{background:#2b2b2e}
+    .btn.copy{background:#35353a}
+    .btn:hover{filter:brightness(1.05)}
+    .note{font-size:.9rem;color:var(--muted); margin-top:6px}
+    .grid{
+      display:grid; gap:12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width:700px){
+      .grid{grid-template-columns: 1.2fr .6fr .8fr .7fr .7fr auto}
+      .card{display:contents} /* Use CSS grid as table on desktop */
+      .cell.head{font-weight:700; color:#e7e7e7; opacity:.9}
+    }
+    .row{
+      background:var(--card); border:1px solid #262629; border-radius:14px; padding:14px;
+      display:grid; gap:8px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width:700px){
+      .row{display:contents; padding:0; border:none}
+    }
+    .cell{
+      display:flex; align-items:center; gap:10px;
+    }
+    .cell .label{display:block; font-size:.8rem; color:var(--muted)}
+    @media (min-width:700px){
+      .cell .label{display:none}
+    }
+    .pill{font-size:.85rem; background:#2b2b2e; padding:6px 10px; border-radius:999px}
+    .actions{display:flex; gap:8px; flex-wrap:wrap}
+    a.link{color:#9bd; text-decoration:none; word-break:break-all}
+    .copyBtn{padding:8px 10px; border-radius:8px; background:#2c2c31; color:#ddd; border:none; cursor:pointer}
+    .copyBtn:active{transform:scale(.98)}
+    footer{padding:30px 16px; color:var(--muted); text-align:center}
+    .warn{color:#ffb3b3}
+    .headbar{
+      display:none;
+      grid-template-columns: 1.2fr .6fr .8fr .7fr .7fr auto;
+      gap:12px; padding:8px 10px; color:#999;
+      border-bottom:1px solid #242427; margin-bottom:8px
+    }
+    @media (min-width:700px){ .headbar{display:grid} }
+    .headbar div{font-size:.9rem}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Índice de Invitaciones — XV de Sofía</h1>
+    <div class="sub">Panel privado para gestionar enlaces de invitación y boletos. <span class="warn">No compartas esta página.</span></div>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Buscar por nombre, código o email…" />
+      <input id="baseUrl" type="text" placeholder="BASE_URL (ej. https://usuario.github.io/invitaciones/)" />
+      <button class="btn secondary" id="applyBase">Aplicar BASE_URL</button>
+      <button class="btn" id="addGuest">Añadir invitado</button>
+    </div>
+    <div class="note">Tip: establece <b>BASE_URL</b> para que los enlaces se construyan automáticamente. También puedes pegar URLs completas por invitado.</div>
+  </header>
+
+  <main>
+    <div class="headbar">
+      <div>Invitado</div><div>Accesos</div><div>Invitación</div><div>Boleto</div><div>RSVP</div><div>Acciones</div>
+    </div>
+    <div id="list" class="grid"></div>
+  </main>
+
+  <footer>
+    © XV de Sofía — Panel privado • Genera/gestiona links, copia y envía por WhatsApp o correo.
+  </footer>
+
+<script>
+// ===================== CONFIG =====================
+// Edita este arreglo con tus invitados. "file" es el HTML de la invitación por invitado.
+let INVITADOS = [
+  { nombre:"Ana Rodríguez", codigo:"INV001", accesos:3, file:"INV001.html", boleto:"boletos/INV001.pdf", rsvp:"https://forms.gle/tu-formulario", email:"ana@example.com" },
+  { nombre:"Carlos Pérez", codigo:"INV002", accesos:1, file:"INV002.html", boleto:"boletos/INV002.pdf", rsvp:"https://forms.gle/tu-formulario", email:"carlos@example.com" },
+  { nombre:"Familia García", codigo:"INV003", accesos:4, file:"INV003.html", boleto:"boletos/INV003.pdf", rsvp:"https://forms.gle/tu-formulario", email:"familia.garcia@example.com" }
+];
+
+// BASE_URL para GitHub Pages o servidor propio. Puedes setearlo desde el input.
+let BASE_URL = ""; // ej. "https://usuario.github.io/invitaciones/"
+
+// ===================== HELPERS =====================
+const $ = (q)=>document.querySelector(q);
+const listEl = $("#list");
+const searchEl = $("#search");
+const baseInput = $("#baseUrl");
+const applyBase = $("#applyBase");
+const addGuest = $("#addGuest");
+
+function buildLink(path){
+  if(!path) return "";
+  // Si ya es URL completa
+  if(/^https?:\/\//i.test(path)) return path;
+  // Sino, concatena BASE_URL
+  return (BASE_URL || "") + path.replace(/^\//,"");
+}
+
+function rowTemplate(item, idx){
+  const inviteUrl = buildLink(item.file);
+  const ticketUrl = buildLink(item.boleto);
+  const rsvpUrl = buildLink(item.rsvp);
+  return `
+  <div class="row card" data-index="${idx}">
+    <div class="cell">
+      <div>
+        <div><strong>${item.nombre}</strong></div>
+        <div class="pill" title="Código">${item.codigo}</div>
+        <div class="label">Invitado</div>
+      </div>
+    </div>
+    <div class="cell">
+      <div>${item.accesos}</div>
+      <div class="label">Accesos</div>
+    </div>
+    <div class="cell">
+      ${inviteUrl ? `<a class="link" href="${inviteUrl}" target="_blank">Abrir invitación</a>` : `<span class="muted">—</span>`}
+      <div class="label">Invitación</div>
+    </div>
+    <div class="cell">
+      ${ticketUrl ? `<a class="link" href="${ticketUrl}" target="_blank">Abrir boleto</a>` : `<span class="muted">—</span>`}
+      <div class="label">Boleto</div>
+    </div>
+    <div class="cell">
+      ${rsvpUrl ? `<a class="link" href="${rsvpUrl}" target="_blank">Abrir RSVP</a>` : `<span class="muted">—</span>`}
+      <div class="label">RSVP</div>
+    </div>
+    <div class="cell actions">
+      ${inviteUrl ? `<button class="copyBtn" data-copy="${inviteUrl}">Copiar link invitación</button>` : ``}
+      ${ticketUrl ? `<button class="copyBtn" data-copy="${ticketUrl}">Copiar link boleto</button>` : ``}
+      ${rsvpUrl ? `<button class="copyBtn" data-copy="${rsvpUrl}">Copiar link RSVP</button>` : ``}
+    </div>
+  </div>`;
+}
+
+function render(){
+  const term = (searchEl.value || "").toLowerCase();
+  const filtered = INVITADOS.filter(x =>
+    [x.nombre, x.codigo, x.email].join(" | ").toLowerCase().includes(term)
+  );
+  listEl.innerHTML = filtered.map(rowTemplate).join("");
+  bindCopy();
+}
+
+function bindCopy(){
+  document.querySelectorAll(".copyBtn").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const txt = btn.getAttribute("data-copy");
+      try{
+        await navigator.clipboard.writeText(txt);
+        btn.textContent = "¡Copiado!";
+        setTimeout(()=>btn.textContent="Copiar link", 1200);
+      }catch(e){
+        prompt("Copia el enlace:", txt);
+      }
+    });
+  });
+}
+
+// Search
+searchEl.addEventListener("input", render);
+
+// Apply BASE_URL
+applyBase.addEventListener("click", ()=>{
+  BASE_URL = baseInput.value.trim();
+  render();
+});
+
+// Add guest (quick form)
+addGuest.addEventListener("click", ()=>{
+  const nombre = prompt("Nombre del invitado:");
+  if(!nombre) return;
+  const codigo = prompt("Código (ej. INV123):") || "";
+  const accesos = parseInt(prompt("Número de accesos:"), 10) || 1;
+  const file = prompt("Archivo HTML de la invitación (ej. INV123.html):") || "";
+  const boleto = prompt("Ruta/URL del boleto (opcional):") || "";
+  const rsvp = prompt("URL RSVP (opcional):") || "";
+  const email = prompt("Email (opcional):") || "";
+  INVITADOS.push({nombre,codigo,accesos,file,boleto,rsvp,email});
+  render();
+});
+
+// Initial render
+render();
+</script>
+</body>
+</html>
