@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XV Años Sofía</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      font-family: 'Georgia', serif;
+      background-color: #111;
+      color: #fff;
+      scroll-behavior: smooth;
+    }
+
+    /* Hero / Portada */
+    #hero {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 10;
+      transition: opacity 0.6s ease;
+    }
+
+    #hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background-color: #000;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    .title-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      color: white;
+      text-shadow: 2px 2px 6px black;
+    }
+
+    .title-container h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    .title-container h2 {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .title-container h3 {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #f55;
+    }
+
+    /* Contenido general */
+    .contenido {
+      margin-top: 100vh;
+      padding: 40px 20px;
+      background-color: #1a1a1a;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    .section {
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #1a1a1a, #000);
+  border: 1px solid #600; /* Borde rojo oscuro */
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+    .section h4 {
+      color: #f33;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+
+    .section p, .section a {
+      font-size: 1rem;
+      color: #ddd;
+      line-height: 1.5;
+    }
+
+    a {
+      color: #f66;
+      text-decoration: none;
+    }
+
+    .calendar-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #c00;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    #hero.oculto {
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* Estilo especial para la sección de ceremonia */
+  #ceremonia {
+    background: linear-gradient(135deg, #1a1a1a, #000);
+    border: 1px solid #600;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  }
+
+  #ceremonia h4 {
+    color: #ff3333;
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 3px #000;
+  }
+
+  #ceremonia p {
+    color: #ddd;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+
+  #ceremonia a {
+    color: #ff6666;
+    text-decoration: none;
+  }
+
+  #ceremonia a:hover {
+    text-decoration: underline;
+  }
+  .wishlist-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 22px;
+  background-color: #900; /* Rojo gótico intenso */
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.wishlist-btn:active {
+  background-color: #b00; /* Un poco más claro al presionar */
+  transform: scale(0.98);
+}
+.rsvp-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 22px;
+  background-color: #600; /* Rojo oscuro gótico */
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.rsvp-btn:active {
+  background-color: #900; /* Más claro al presionar */
+  transform: scale(0.98);
+}
+.whatsapp-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 22px;
+  background-color: #25D366; /* Verde oficial de WhatsApp */
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(37, 211, 102, 0.4);
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.whatsapp-btn:active {
+  background-color: #1DA851;
+  transform: scale(0.98);
+}
+#presentacion {
+  background: url('fondo-presentacion.jpg') no-repeat center center/cover;
+}
+#ceremonia {
+  background: url('fondo-ceremonia.jpg') no-repeat center center/cover;
+}
+#agradecimiento {
+  background: url('fondo-agradecimiento.jpg') no-repeat center center/cover;
+}
+
+#vestimenta {
+  background: url('fondo-vestimenta.jpg') no-repeat center center/cover;
+}
+
+#contacto {
+  background: url('fondo-contacto.jpg') no-repeat center center/cover;
+}
+
+.highlight-location {
+  color: #ff3b3b;          /* rojo gótico */
+  font-weight: bold;       /* negrita */
+  text-decoration: underline dotted; /* subrayado decorativo */
+  background-color: rgba(0, 0, 0, 0.6); /* fondo oscuro semi-transparente */
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+  </style>
+</head>
+<body>
+
+  <!-- Portada -->
+  <div id="hero">
+    <img src="portada1.jpg" alt="Portada Sofía XV Años">
+    <div class="overlay"></div>
+    <div class="title-container">
+      <h1>Sofía</h1>
+      <h2>Sanpedro Parra</h2>
+      <h3>XV años</h3>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <!-- Presentación -->
+    <div class="section" id="presentacion">
+      <h4>A quien el destino ha elegido para acompañarme en este día,</h4>
+  <p><em>El reloj del destino marca el final de una era... y el inicio de otra.</em></p>
+  <p>Es un honor invitarte a compartir conmigo esta noche mágica en la que celebraré mis XV años.</p>
+      <!--<p>🎟️ Este pase da acceso a: <strong>3 personas</strong></p>-->
+      <p>🗓️ Sábado 4 de octubre de 2025 – 8:00 PM</p>
+      <p>📍 Salón Quinta Imperial, CDMX – 
+        <a href="https://maps.app.goo.gl/8twx1h1adFphhLvP9" target="_blank"><span class="highlight-location">Ver ubicación</span></a>
+      </p>
+     <!--- <a class="calendar-link" href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+SUMMARY:XV Años de Sofía Sanpedro Parra
+DTSTART:20251004T200000
+DTEND:20251004T230000
+LOCATION:Salón Quinta Imperial, CDMX
+DESCRIPTION:Fiesta de XV años de Sofía Sanpedro Parra
+END:VEVENT
+END:VCALENDAR" download="xv_sofia_event.ics">📅 Agregar al calendario</a> -->
+<br>
+<br>
+<p>El gran día se acerca…</p>
+<p>Haznos saber si caminarás junto a nosotros en esta celebración,
+y cuántos pasos vendrán contigo en esta noche eterna.
+Sabemos que, aunque tu corazón desee estar aquí,
+a veces el destino impone otros caminos.</p>
+<a class="rsvp-btn" href="https://forms.gle/A3iNKxMsC6LL7RCm7" target="_blank">
+  ✅ Confirmar asistencia (RSVP)
+</a>
+    </div>
+ <!-- Ceremonia -->
+    <div class="section" id="ceremonia">
+  <h4>🕯️ Ceremonia religiosa</h4>
+  <p>En el silencio sagrado de un templo iluminado por velas,<br>
+  entre ecos de antiguos rezos y notas solemnes,<br>
+  la historia de Sofía entra en un nuevo capítulo.</p>
+
+  <p>Te invitamos a acompañarnos en este instante sagrado,<br>
+  donde la fe y la gratitud se funden con la belleza de la noche.</p>
+
+  <p>📍 <strong>Parroquia Preciosa Sangre de Cristo</strong> – 
+    <a href="https://maps.app.goo.gl/ePeMnvProbJ5k62X8" target="_blank"><span class="highlight-location">Ver ubicación</span></a>
+  </p>
+  <p>🗓️ <strong>4 de octubre de 2025 – 6:00 PM</strong></p>
+</div>
+    <!-- Agradecimiento -->
+    <div class="section" id="agradecimiento">
+      <h4>💌 Agradecimiento</h4>
+      <p>Gracias por acompañarme en este momento tan especial.  
+      El mejor regalo será tu presencia, pero si deseas hacer un obsequio,  
+      puedes consultar mi lista de deseos aquí.</p>
+    <a class="wishlist-btn" href="https://www.amazon.com.mx/registries/gl/guest-view/WUE2WD014SX1?ref_=cm_sw_r_apin_ggr-subnav-share_FV6CP6P4HAKE2R9MRSEY&language=en-US" target="_blank">
+  🎁 Ver mi wishlist
+</a>
+    </div>
+
+    <!-- Código de vestimenta -->
+    <div class="section" id="vestimenta">
+      <h4>🖤 Código de vestimenta</h4>
+  <p>La noche tendrá un aire gótico y elegante,  
+  pero cada alma es libre de brillar a su manera.  
+  Si lo deseas, deja que tu atuendo refleje tu espíritu,  
+  ya sea oscuro, rebelde, clásico o de fantasía.</p>
+
+  <p>Lleva tu propio estilo a la ceremonia y a la celebración,  
+  pues la esencia de esta noche es que cada invitado  
+  sea parte de la magia con su propia luz… o su propia sombra.</p>
+    </div>
+    <!-- Contacto
+    <div class="section" id="contacto">
+      <h4>📱 Contacto</h4>
+      <p>Para confirmar asistencia o resolver dudas, contáctame vía WhatsApp:  
+      </p>
+      <a class="whatsapp-btn" href="https://wa.me/5215514968451" target="_blank">
+  📱 Enviar mensaje por WhatsApp
+</a>
+-->
+    </div>
+  </div>
+
+  <script>
+    // Oculta la portada al hacer scroll
+    window.addEventListener('scroll', () => {
+      const hero = document.getElementById('hero');
+      if (window.scrollY > 50) {
+        hero.classList.add('oculto');
+      } else {
+        hero.classList.remove('oculto');
+      }
+    });
+  </script>
+
+</body>
+</html>
